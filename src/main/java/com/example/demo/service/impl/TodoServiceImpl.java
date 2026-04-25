@@ -28,4 +28,8 @@ public class TodoServiceImpl implements ITodoService {
         todo.setPriority(dto.getPriority());
         todoRepository.save(todo);
     }
+
+    public Todo getTodoByContent(String content){
+        return todoRepository.findTodoByContent(content);
+    }
 }

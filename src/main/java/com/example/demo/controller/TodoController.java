@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.TodoDTO;
+import com.example.demo.model.Todo;
 import com.example.demo.service.ITodoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,12 @@ public class TodoController {
         if (result.hasErrors()) {
             return "form";
         }
+        Todo duplicate = todoService.getTodoByContent(todoDTO.getContent());
+        if (duplicate != null){
+            result.rejectValue("content", null, "Content đã tồn tại");
+            return "form";
+        }
+
         todoService.createTodo(todoDTO);
         return "redirect:/todos";
     }

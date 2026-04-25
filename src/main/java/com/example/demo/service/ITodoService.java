@@ -9,4 +9,6 @@ public interface ITodoService {
     List<Todo> getAllTodo();
 
     void createTodo(TodoDTO dto);
+
+    Todo getTodoByContent(String content);
 }
