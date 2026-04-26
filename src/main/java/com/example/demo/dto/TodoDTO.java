@@ -1,8 +1,6 @@
 package com.example.demo.dto;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,5 +25,6 @@ public class TodoDTO {
     private Boolean status;
 
     @NotNull(message = "Priority không được để trống")
+    @Positive(message = "Priority không được âm")
     private Integer priority;
 }

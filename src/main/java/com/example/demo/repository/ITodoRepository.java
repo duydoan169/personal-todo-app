@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ITodoRepository extends JpaRepository<Todo, Long> {
     Todo findTodoByContent(String content);
+
+    Todo findTodoById(Long id);
 }

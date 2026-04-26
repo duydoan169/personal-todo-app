@@ -11,4 +11,10 @@ public interface ITodoService {
     void createTodo(TodoDTO dto);
 
     Todo getTodoByContent(String content);
+
+    Todo getTodoById(Long id);
+
+    void updateTodo(TodoDTO dto, Long id);
+
+    void deleteTodo(Long id);
 }

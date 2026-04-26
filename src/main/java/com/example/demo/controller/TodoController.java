@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/todos")
@@ -29,11 +27,12 @@ public class TodoController {
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("todoDTO", new TodoDTO());
+        model.addAttribute("action", "/todos/create");
         return "form";
     }
 
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute TodoDTO todoDTO, BindingResult result) {
+    public String create(@Valid @ModelAttribute TodoDTO todoDTO, BindingResult result, RedirectAttributes ra) {
         if (result.hasErrors()) {
             return "form";
         }
@@ -44,6 +43,50 @@ public class TodoController {
         }
 
         todoService.createTodo(todoDTO);
+        ra.addFlashAttribute("success", "Thêm công việc thành công");
+        return "redirect:/todos";
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateForm(Model model, @PathVariable Long id, RedirectAttributes ra) {
+        Todo update = todoService.getTodoById(id);
+        if (update == null){
+            ra.addFlashAttribute("failed", "Id công việc không tồn tại");
+            return "redirect:/todos";
+        }
+
+        model.addAttribute("todoDTO", new TodoDTO(
+                update.getContent(),
+                update.getDueDate(),
+                update.getStatus(),
+                update.getPriority()
+        ));
+
+        model.addAttribute("action", "/todos/update/" + id);
+        return "form";
+    }
+
+    @PostMapping("/update/{id}")
+    public String update(@Valid @ModelAttribute TodoDTO todoDTO, BindingResult result, @PathVariable Long id, RedirectAttributes ra) {
+        if (result.hasErrors()) {
+            return "form";
+        }
+
+        todoService.updateTodo(todoDTO, id);
+        ra.addFlashAttribute("success", "Sửa công việc thành công");
+        return "redirect:/todos";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, RedirectAttributes ra){
+        Todo delete = todoService.getTodoById(id);
+        if (delete == null){
+            ra.addFlashAttribute("failed", "Id công việc không tồn tại");
+            return "redirect:/todos";
+        }
+
+        todoService.deleteTodo(id);
+        ra.addFlashAttribute("success", "Xóa công việc thành công");
         return "redirect:/todos";
     }
 }

@@ -32,4 +32,24 @@ public class TodoServiceImpl implements ITodoService {
     public Todo getTodoByContent(String content){
         return todoRepository.findTodoByContent(content);
     }
+
+    public Todo getTodoById(Long id){
+        return todoRepository.findTodoById(id);
+    }
+
+    @Override
+    public void updateTodo(TodoDTO dto, Long id) {
+        Todo todo = new Todo();
+        todo.setId(id);
+        todo.setContent(dto.getContent());
+        todo.setDueDate(dto.getDueDate());
+        todo.setStatus(dto.getStatus());
+        todo.setPriority(dto.getPriority());
+        todoRepository.save(todo);
+    }
+
+    @Override
+    public void deleteTodo(Long id) {
+        todoRepository.deleteById(id);
+    }
 }

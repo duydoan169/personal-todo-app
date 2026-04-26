@@ -12,6 +12,12 @@
 </head>
 <body>
 <a th:href="@{/todos/create}" class="btn btn-primary" style="margin: 10px 5px">Create</a>
+<div class="alert alert-danger" style="padding-top: 17px" role="alert" th:if="${failed != null}">
+  <h4 class="alert-heading" th:text="${failed}"></h4>
+</div>
+<div class="alert alert-success" style="padding-top: 17px" role="alert" th:if="${success != null}">
+  <h4 class="alert-heading" th:text="${success}"></h4>
+</div>
 <table class="table table-striped table-inverse">
   <thead class="thead-inverse">
   <tr>
@@ -19,16 +25,25 @@
     <th>CONTENT</th>
     <th>DUE DATE</th>
     <th>STATUS</th>
-    <th>PRIORITY</th>
+    <th class="text-center" >PRIORITY</th>
+    <th class="text-center" colspan="2">ACTION</th>
   </tr>
   </thead>
   <tbody>
   <tr th:each="t : ${todos}">
     <td th:text="${t.id}" class="text-center"></td>
-    <td width="40%" th:text="${t.content}"></td>
+    <td width="30%" th:text="${t.content}"></td>
     <td th:text="${t.status} ? 'Đã hoàn thành' : 'Chưa hoàn thành'" ></td>
     <td th:text="${t.dueDate}"></td>
-    <td th:text="${t.priority}" ></td>
+    <td class="text-center" th:text="${t.priority}" ></td>
+    <td class="text-center">
+      <form th:action="@{/todos/delete/{id}(id=${t.id})}" method="post">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Xác nhận xóa công việc?')">Xóa</button>
+      </form>
+    </td>
+    <td class="text-center">
+      <a type="button" class="btn btn-warning" th:href="@{/todos/update/{id}(id=${t.id})}">Sửa</a>
+    </td>
   </tr>
   </tbody>
 </table>
