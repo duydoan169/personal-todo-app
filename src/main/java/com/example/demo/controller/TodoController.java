@@ -32,12 +32,14 @@ public class TodoController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute TodoDTO todoDTO, BindingResult result, RedirectAttributes ra) {
+    public String create(@Valid @ModelAttribute TodoDTO todoDTO, BindingResult result, Model model, RedirectAttributes ra) {
         if (result.hasErrors()) {
+            model.addAttribute("action", "/todos/create");
             return "form";
         }
         Todo duplicate = todoService.getTodoByContent(todoDTO.getContent());
         if (duplicate != null){
+            model.addAttribute("action", "/todos/create");
             result.rejectValue("content", null, "Content đã tồn tại");
             return "form";
         }
