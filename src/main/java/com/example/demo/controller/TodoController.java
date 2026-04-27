@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.TodoDTO;
 import com.example.demo.model.Todo;
 import com.example.demo.service.ITodoService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,15 +18,22 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class TodoController {
 
     private final ITodoService todoService;
+    private final HttpSession session;
 
     @GetMapping
     public String getAll(Model model) {
+        if (session.getAttribute("user") == null){
+            return "redirect:/login";
+        }
         model.addAttribute("todos", todoService.getAllTodo());
         return "todo-list";
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
+        if (session.getAttribute("user") == null){
+            return "redirect:/login";
+        }
         model.addAttribute("todoDTO", new TodoDTO());
         model.addAttribute("action", "/todos/create");
         return "form";
@@ -37,6 +45,7 @@ public class TodoController {
             model.addAttribute("action", "/todos/create");
             return "form";
         }
+
         Todo duplicate = todoService.getTodoByContent(todoDTO.getContent());
         if (duplicate != null){
             model.addAttribute("action", "/todos/create");
@@ -51,6 +60,9 @@ public class TodoController {
 
     @GetMapping("/update/{id}")
     public String updateForm(Model model, @PathVariable Long id, RedirectAttributes ra) {
+        if (session.getAttribute("user") == null){
+            return "redirect:/login";
+        }
         Todo update = todoService.getTodoById(id);
         if (update == null){
             ra.addFlashAttribute("failed", "Id công việc không tồn tại");

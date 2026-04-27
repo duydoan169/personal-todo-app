@@ -1,17 +1,19 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Title</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <title th:text="#{page.title}"></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<a th:href="@{/todos/create}" class="btn btn-primary" style="margin: 10px 5px">Create</a>
+<div style="margin: 10px 5px">
+  <a href="?lang=vi" class="btn btn-sm btn-outline-secondary" th:text="#{lang.vi}"></a>
+  <a href="?lang=en" class="btn btn-sm btn-outline-secondary" th:text="#{lang.en}"></a>
+</div>
+<h2 th:text="|#{page.title} - ${session.user}|"></h2>
+<a th:href="@{/todos/create}" class="btn btn-primary" style="margin: 10px 5px" th:text="#{btn.create}"></a>
 <div class="alert alert-danger" style="padding-top: 17px" role="alert" th:if="${failed != null}">
   <h4 class="alert-heading" th:text="${failed}"></h4>
 </div>
@@ -21,34 +23,32 @@
 <table class="table table-striped table-inverse">
   <thead class="thead-inverse">
   <tr>
-    <th class="text-center">ID</th>
-    <th>CONTENT</th>
-    <th>DUE DATE</th>
-    <th>STATUS</th>
-    <th class="text-center" >PRIORITY</th>
-    <th class="text-center" colspan="2">ACTION</th>
+    <th class="text-center" th:text="#{col.id}"></th>
+    <th th:text="#{col.content}"></th>
+    <th th:text="#{col.dueDate}"></th>
+    <th th:text="#{col.status}"></th>
+    <th class="text-center" th:text="#{col.priority}"></th>
+    <th class="text-center" colspan="2" th:text="#{col.action}"></th>
   </tr>
   </thead>
   <tbody>
   <tr th:each="t : ${todos}">
     <td th:text="${t.id}" class="text-center"></td>
     <td width="30%" th:text="${t.content}"></td>
-    <td th:text="${t.status} ? 'Đã hoàn thành' : 'Chưa hoàn thành'" ></td>
     <td th:text="${t.dueDate}"></td>
-    <td class="text-center" th:text="${t.priority}" ></td>
+    <td th:text="${t.status} ? #{status.done} : #{status.notdone}"></td>
+    <td class="text-center" th:text="${t.priority}"></td>
     <td class="text-center">
       <form th:action="@{/todos/delete/{id}(id=${t.id})}" method="post">
-        <button type="submit" class="btn btn-danger" onclick="return confirm('Xác nhận xóa công việc?')">Xóa</button>
+        <button type="submit" class="btn btn-danger" th:onclick="|return confirm('#{confirm.delete}')|" th:text="#{btn.delete}"></button>
       </form>
     </td>
     <td class="text-center">
-      <a type="button" class="btn btn-warning" th:href="@{/todos/update/{id}(id=${t.id})}">Sửa</a>
+      <a class="btn btn-warning" th:href="@{/todos/update/{id}(id=${t.id})}" th:text="#{btn.edit}"></a>
     </td>
   </tr>
   </tbody>
 </table>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
